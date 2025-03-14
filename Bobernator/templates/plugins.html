@@ -1,0 +1,622 @@
+{% extends "base.html" %}
+
+{% block title %}Плагіни і модифікації{% endblock %}
+
+{% block content %}
+<style>
+.craft-card .ingredients {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.craft-card:hover .ingredients {
+    opacity: 1;
+    max-height: 300px;
+}
+
+.craft-image {
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.craft-card:hover .craft-image {
+    transform: scale(1);
+}
+
+.btn-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.craft-card {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.craft-card:hover {
+    transform: translateY(-5px);
+}
+</style>
+
+<div class="container py-4">
+    <!-- Рекомендовані моди -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Рекомендовані моди</h2>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card bg-dark h-100 border-secondary">
+                        <div class="card-body">
+                            <h4 class="h5">PlasmoVoice</h4>
+                            <p>Голосовий чат для спілкування з іншими гравцями</p>
+                            <div class="btn-group">
+                                <a href="https://modrinth.com/mod/plasmo-voice" target="_blank" class="btn btn-primary btn-sm">Завантажити</a>
+                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#plasmoVoiceModal">
+                                    Інформація
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card bg-dark h-100 border-secondary">
+                        <div class="card-body">
+                            <h4 class="h5">Emotecraft</h4>
+                            <p>Емоції та анімації для вашого персонажа</p>
+                            <div class="btn-group">
+                                <a href="https://modrinth.com/mod/emotecraft" target="_blank" class="btn btn-primary btn-sm">Завантажити</a>
+                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#emotecraftModal">
+                                    Інформація
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card bg-dark h-100 border-secondary">
+                        <div class="card-body">
+                            <h4 class="h5">OptiFine (для Forge)</h4>
+                            <p>Оптимізація гри та підтримка шейдерів</p>
+                            <div class="btn-group">
+                                <a href="https://optifine.net/downloads" target="_blank" class="btn btn-primary btn-sm">Завантажити</a>
+                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#optifineModal">
+                                    Інформація
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card bg-dark h-100 border-secondary">
+                        <div class="card-body">
+                            <h4 class="h5">Sodium (для Fabric)</h4>
+                            <p>Альтернативна оптимізація для Fabric</p>
+                            <div class="btn-group">
+                                <a href="https://modrinth.com/mod/sodium" target="_blank" class="btn btn-primary btn-sm">Завантажити</a>
+                                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#sodiumModal">
+                                    Інформація
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальні вікна для модів -->
+    <!-- PlasmoVoice Modal -->
+    <div class="modal fade" id="plasmoVoiceModal" tabindex="-1" aria-labelledby="plasmoVoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="plasmoVoiceModalLabel">PlasmoVoice - Інструкція</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="h6 mb-2">Як користуватися:</h5>
+                    <ol class="list-group list-group-numbered bg-dark mb-3">
+                        <li class="list-group-item bg-dark text-white border-secondary">Натисніть клавішу <kbd>V</kbd> (за замовчуванням) для розмови</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Тримайте клавішу для продовження розмови</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Відпустіть для завершення передачі голосу</li>
+                    </ol>
+                    <h5 class="h6 mb-2">Налаштування:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">
+                            <p class="mb-1">Змінити клавішу активації:</p>
+                            <small>Натисніть <kbd>ESC</kbd> → <kbd>Налаштування</kbd> → <kbd>Керування</kbd> → <kbd>PlasmoVoice</kbd></small>
+                        </li>
+                        <li class="list-group-item bg-dark text-white border-secondary">
+                            <p class="mb-1">Налаштування звуку:</p>
+                            <small>Використовуйте команду <code>/pv</code> в грі</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emotecraft Modal -->
+    <div class="modal fade" id="emotecraftModal" tabindex="-1" aria-labelledby="emotecraftModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="emotecraftModalLabel">Emotecraft - Інструкція</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="h6 mb-2">Як використовувати:</h5>
+                    <ol class="list-group list-group-numbered bg-dark mb-3">
+                        <li class="list-group-item bg-dark text-white border-secondary">Натисніть клавішу <kbd>B</kbd> (за замовчуванням)</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Виберіть емоцію зі списку</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Натисніть для активації</li>
+                    </ol>
+                    <h5 class="h6 mb-2">Доступні стандартні емоції:</h5>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <small class="d-block text-white">• Вітання 👋 (Wave)</small>
+                            <small class="d-block text-white">• Танець 💃 (Dance)</small>
+                            <small class="d-block text-white">• Сидіння 🪑 (Sit)</small>
+                            <small class="d-block text-white">• Сміх 😄 (Laugh)</small>
+                            <small class="d-block text-white">• Сумний 😢 (Sad)</small>
+                        </div>
+                        <div class="col-6">
+                            <small class="d-block text-white">• Злий 😠 (Angry)</small>
+                            <small class="d-block text-white">• Радісний 🎉 (Happy)</small>
+                            <small class="d-block text-white">• Вказати 👆 (Point)</small>
+                            <small class="d-block text-white">• Поклін 🙇 (Bow)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OptiFine Modal -->
+    <div class="modal fade" id="optifineModal" tabindex="-1" aria-labelledby="optifineModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="optifineModalLabel">OptiFine - Можливості</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="h6 mb-2">Основні функції:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">Підтримка HD текстур та шейдерів</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Покращена продуктивність гри</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Розширені налаштування графіки</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Динамічне освітлення</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sodium Modal -->
+    <div class="modal fade" id="sodiumModal" tabindex="-1" aria-labelledby="sodiumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="sodiumModalLabel">Sodium - Можливості</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="h6 mb-2">Переваги:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">Значне підвищення FPS</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Оптимізація рендерингу</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Зменшення використання пам'яті</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">Сумісність з іншими Fabric модами</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ресурспаки -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Рекомендовані ресурспаки</h2>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary">
+                        <div class="card-body">
+                            <h4 class="h5">Faithful 32x</h4>
+                            <p>Покращена версія стандартних текстур</p>
+                            <a href="https://faithful.team/" target="_blank" class="btn btn-primary btn-sm">Завантажити</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary">
+                        <div class="card-body">
+                            <h4 class="h5">Default Dark UI</h4>
+                            <p>Темний інтерфейс для гри</p>
+                            <a href="https://www.curseforge.com/minecraft/texture-packs/default-dark-mode" target="_blank" class="btn btn-primary btn-sm">Завантажити</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary">
+                        <div class="card-body">
+                            <h4 class="h5">Visual Enchantments</h4>
+                            <p>Візуальні ефекти для зачарованих предметів</p>
+                            <a href="https://www.curseforge.com/minecraft/texture-packs/visual-enchantments" target="_blank" class="btn btn-primary btn-sm">Завантажити</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Крафти -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Доступні крафти</h2>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#saddleModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Сідло 🐎</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/saddle.png" alt="Крафт сідла" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#dragonSlayerModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Dragon Slayer ⚔️</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/Dragon_slayer.png" alt="Крафт Dragon Slayer" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#megaChestplateModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Шипований нагрудник 🛡️</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/mega_chastplate.png" alt="Крафт шипованого нагрудника" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#megaBowModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Могутній лук 🏹</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/mega_bow.png" alt="Крафт могутнього лука" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#megaAxeModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Могутня сокира 🪓</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/mega_axe.png" alt="Крафт могутньої сокири" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#megaPickaxeModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Могутня кирка ⛏️</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/mega_pickaxe.png" alt="Крафт могутньої кирки" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#lootSwordModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Меч удачі 🍀</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/loot_sword.png" alt="Крафт меча удачі" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#lightBlockModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Блок світла 💡</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/light.png" alt="Крафт блоку світла" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark h-100 border-secondary craft-card" data-bs-toggle="modal" data-bs-target="#fishingRodModal">
+                        <div class="card-header">
+                            <h4 class="h5 mb-0">Вудка рибалки 🎣</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="/static/images/crafts/fishing.png" alt="Крафт вудки рибалки" class="img-fluid craft-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальні вікна для крафтів -->
+    <!-- Saddle Modal -->
+    <div class="modal fade" id="saddleModal" tabindex="-1" aria-labelledby="saddleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="saddleModalLabel">Крафт сідла 🐎</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/saddle.png" alt="Крафт сідла" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">3× Шкіра</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dragon Slayer Modal -->
+    <div class="modal fade" id="dragonSlayerModal" tabindex="-1" aria-labelledby="dragonSlayerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="dragonSlayerModalLabel">Крафт Dragon Slayer ⚔️</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/Dragon_slayer.png" alt="Крафт Dragon Slayer" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">2× Блок діаманту</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Дихання дракона</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Діамантовий меч</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Незеритовий меч</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Незеритова сокира</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">2× Незеритовий злиток</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Зірка незера</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Дерев'яний меч (Гострота XXI)</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mega Chestplate Modal -->
+    <div class="modal fade" id="megaChestplateModal" tabindex="-1" aria-labelledby="megaChestplateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="megaChestplateModalLabel">Крафт шипованого нагрудника 🛡️</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/mega_chastplate.png" alt="Крафт шипованого нагрудника" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">2× Кактус</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">2× Загострений сталактит</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">4× Ковальський шаблон "Тиша"</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Діамантовий нагрудник</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Діамантовий нагрудник (Шипи X)</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mega Bow Modal -->
+    <div class="modal fade" id="megaBowModal" tabindex="-1" aria-labelledby="megaBowModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="megaBowModalLabel">Крафт могутнього лука 🏹</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/mega_bow.png" alt="Крафт могутнього лука" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Лук</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">4× Блок діаманту</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">2× Кристал енду</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">2× Заряд вітру</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Лук (Удар V)</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mega Axe Modal -->
+    <div class="modal fade" id="megaAxeModal" tabindex="-1" aria-labelledby="megaAxeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="megaAxeModalLabel">Крафт могутньої сокири 🪓</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/mega_axe.png" alt="Крафт могутньої сокири" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">8× Блок діаманту</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Діамантова сокира</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Діамантова сокира (Ефективність X)</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mega Pickaxe Modal -->
+    <div class="modal fade" id="megaPickaxeModal" tabindex="-1" aria-labelledby="megaPickaxeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="megaPickaxeModalLabel">Крафт могутньої кирки ⛏️</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/mega_pickaxe.png" alt="Крафт могутньої кирки" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">8× Блок діаманту</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Діамантова кирка</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Діамантова кирка (Ефективність X)</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loot Sword Modal -->
+    <div class="modal fade" id="lootSwordModal" tabindex="-1" aria-labelledby="lootSwordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="lootSwordModalLabel">Крафт меча удачі 🍀</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/loot_sword.png" alt="Крафт меча удачі" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Призмариновий кристал</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Незеритовий злиток</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Сльоза гаста</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Стрижень пломення</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Золотий меч</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Павуче око</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Гнила плоть</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Перлина енду</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Кроляча лапка</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Золотий меч (Продуктивність V) з міцністю 1/32</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Light Block Modal -->
+    <div class="modal fade" id="lightBlockModal" tabindex="-1" aria-labelledby="lightBlockModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="lightBlockModalLabel">Крафт блоку світла 💡</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/light.png" alt="Крафт блоку світла" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">4× Світлокамінь</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">4× Світлокам'яний пил</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Скляна пляшка</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Блок світла</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fishing Rod Modal -->
+    <div class="modal fade" id="fishingRodModal" tabindex="-1" aria-labelledby="fishingRodModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="fishingRodModalLabel">Крафт вудки рибалки 🎣</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="/static/images/crafts/fishing.png" alt="Крафт вудки рибалки" class="img-fluid craft-image">
+                    </div>
+                    <h5 class="h6 mb-2">Необхідні матеріали:</h5>
+                    <ul class="list-group bg-dark">
+                        <li class="list-group-item bg-dark text-white border-secondary">3× Діамант</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Палиця</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Вудка</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Нитка</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Сирий лосось</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Скелезуб</li>
+                        <li class="list-group-item bg-dark text-white border-secondary">1× Сира тріска</li>
+                    </ul>
+                    <p class="mb-0 mt-3 text-info">
+                        <small>Результат: Вудка (Морська фортуна III, Приманка III, Незламність III, Ремонт)</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

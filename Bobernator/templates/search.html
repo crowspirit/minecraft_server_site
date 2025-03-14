@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Пошук користувачів{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h4 mb-0">Пошук користувачів</h2>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('search_users') }}" method="GET" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" value="{{ query }}" placeholder="Введіть нікнейм гравця...">
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </div>
+            </form>
+
+            {% if query %}
+                {% if users %}
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        {% for user in users %}
+                            <div class="col">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <img src="https://crafthead.net/avatar/{{ user.minecraft_username }}" alt="Скін гравця" class="img-fluid rounded-circle mb-2" style="width: 64px;">
+                                        <h5 class="card-title mb-1">{{ user.username }}</h5>
+                                        <p class="text-muted small mb-2">{{ user.minecraft_username }}</p>
+                                        <a href="{{ url_for('profile', username=user.username) }}" class="btn btn-primary btn-sm">Переглянути профіль</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        На жаль, за вашим запитом "{{ query }}" нічого не знайдено.
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+
+{% block title %}{{ topic.title }} - Форум{% endblock %}
+
+{% block content %}
+<style>
+    .message-card {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 1rem;
+    }
+    .message-card.pinned {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+    }
+    .message-card.pinned::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #ff4444, #ff0000);
+    }
+    .message-card:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    .reply-form {
+        display: none;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 0.25rem;
+    }
+    .reply-to-info {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 0.5rem;
+        padding: 0.25rem 0.5rem;
+        background: rgba(33, 150, 243, 0.1);
+        border-radius: 0.25rem;
+        border-left: 3px solid #2196f3;
+    }
+    .reply-link {
+        color: #2196f3;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .reply-link:hover {
+        color: #64b5f6;
+        text-decoration: underline;
+    }
+    .breadcrumb-item a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+    .breadcrumb-item.active {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    .vote-button {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        transition: color 0.2s;
+        font-size: 1.2rem;
+    }
+    .vote-button:hover {
+        color: #ff4444;
+    }
+    .vote-button.active {
+        color: #ff0000;
+        animation: pulse 1s;
+    }
+    .vote-button.active.dislike {
+        color: #ff0000;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+    .message-stats {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
+    .pagination {
+        margin-top: 2rem;
+        justify-content: center;
+    }
+    .page-link {
+        background-color: rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+    .page-link:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .page-item.disabled .page-link {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .pin-button {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+    }
+    .pin-button:hover {
+        color: #ff4444;
+        transform: rotate(45deg);
+    }
+    .pin-button.active {
+        color: #ff0000;
+        transform: rotate(45deg);
+    }
+    .delete-button {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        transition: color 0.2s;
+        font-size: 1.2rem;
+    }
+    .delete-button:hover {
+        color: #dc3545;
+    }
+</style>
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('forum') }}">Форум</a></li>
+            <li class="breadcrumb-item active">{{ topic.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="card bg-transparent mb-4">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h2 mb-0">{{ topic.title }}</h1>
+        </div>
+        <div class="card-body text-white">
+            <p class="lead mb-0">{{ topic.description }}</p>
+        </div>
+    </div>
+
+    {% if current_user.is_authenticated %}
+    <div class="card bg-transparent mb-4">
+        <div class="card-header text-white">
+            <h2 class="h5 mb-0">Додати повідомлення</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="content" class="form-label text-white">Ваше повідомлення</label>
+                    <textarea class="form-control bg-dark text-white" id="content" name="content" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label text-white">Зображення (необов'язково)</label>
+                    <input type="file" class="form-control bg-dark text-white" id="image" name="image" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary">Відправити</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card bg-transparent">
+        <div class="card-header text-white">
+            <h2 class="h5 mb-0">Повідомлення</h2>
+        </div>
+        <div class="messages-container">
+            {% for message in all_messages %}
+            <div class="message-card p-3 {% if message.is_pinned %}pinned{% endif %}" id="message-{{ message.id }}">
+                {% if message.parent %}
+                <div class="reply-to-info">
+                    Відповідь на повідомлення від <strong>{{ message.parent.author.username }}</strong>
+                    <a class="reply-link" href="#message-{{ message.parent_id }}">(перейти до повідомлення)</a>
+                    <br>
+                    <small class="text-white opacity-75">{{ message.parent.content[:100] }}{% if message.parent.content|length > 100 %}...{% endif %}</small>
+                </div>
+                {% endif %}
+                
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0 text-white">{{ message.author.username }}</h6>
+                    <small class="text-white opacity-75">{{ message.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                </div>
+                <p class="mb-3 text-white">{{ message.content }}</p>
+                {% if message.image_path %}
+                <div class="message-image mb-2">
+                    <img src="{{ url_for('static', filename='uploads/' + message.image_path) }}" 
+                         class="img-fluid rounded" 
+                         style="max-height: 300px;"
+                         alt="Прикріплене зображення">
+                </div>
+                {% endif %}
+
+                <div class="message-stats">
+                    {% if current_user.is_authenticated %}
+                    <div class="stat-item">
+                        <button class="vote-button like-btn {% if message.id in user_votes and user_votes[message.id] == true %}active{% endif %}"
+                                onclick="voteMessage('{{ message.id }}', 'like')"
+                                title="Подобається">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <span class="likes-count">{{ message.likes_count }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <button class="vote-button dislike-btn {% if message.id in user_votes and user_votes[message.id] == false %}active{% endif %}"
+                                onclick="voteMessage('{{ message.id }}', 'dislike')"
+                                title="Не подобається">
+                            <i class="fas fa-heart-crack"></i>
+                        </button>
+                        <span class="dislikes-count">{{ message.dislikes_count }}</span>
+                    </div>
+                    {% if current_user.is_admin %}
+                    <div class="stat-item">
+                        <button class="pin-button {% if message.is_pinned %}active{% endif %}"
+                                onclick="pinMessage('{{ message.id }}')"
+                                title="{% if message.is_pinned %}Відкріпити{% else %}Закріпити{% endif %} повідомлення">
+                            <i class="fas fa-map-pin"></i>
+                        </button>
+                        <button class="delete-button"
+                                onclick="deleteMessage('{{ message.id }}')"
+                                title="Видалити повідомлення">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="stat-item">
+                        <i class="fas fa-heart"></i>
+                        <span>{{ message.likes_count }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-heart-crack"></i>
+                        <span>{{ message.dislikes_count }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="stat-item">
+                        <i class="fas fa-reply"></i>
+                        <span>{{ message.replies_count }}</span>
+                    </div>
+                </div>
+
+                {% if current_user.is_authenticated %}
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-outline-light reply-btn" 
+                            onclick="toggleReplyForm('{{ message.id }}')">
+                        Відповісти
+                    </button>
+                </div>
+                <div class="reply-form" id="reply-form-{{ message.id }}">
+                    <form method="POST" action="{{ url_for('reply_to_message', message_id=message.id) }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <textarea class="form-control bg-dark text-white" 
+                                      name="content" 
+                                      rows="2" 
+                                      required 
+                                      placeholder="Ваша відповідь..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">Зображення (необов'язково)</label>
+                            <input type="file" class="form-control bg-dark text-white" name="image" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">Відправити відповідь</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" 
+                                onclick="toggleReplyForm('{{ message.id }}')">
+                            Скасувати
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="message-card p-3 text-center">
+                <p class="mb-0 text-white opacity-75">У цій темі ще немає повідомлень. Будьте першим!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if pagination.pages > 1 %}
+        <nav aria-label="Навігація по сторінках">
+            <ul class="pagination">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('forum_topic', topic_id=topic.id, page=pagination.prev_num) }}">Попередня</a>
+                </li>
+                {% endif %}
+
+                {% for page in pagination.iter_pages() %}
+                    {% if page %}
+                        <li class="page-item {% if page == pagination.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('forum_topic', topic_id=topic.id, page=page) }}">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('forum_topic', topic_id=topic.id, page=pagination.next_num) }}">Наступна</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    {% if not current_user.is_authenticated %}
+    <div class="alert alert-info mt-4">
+        <h4 class="alert-heading">Увага!</h4>
+        <p class="mb-0">Щоб додавати повідомлення, необхідно <a href="{{ url_for('login') }}">увійти</a> або <a href="{{ url_for('register') }}">зареєструватися</a>.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleReplyForm(messageId) {
+    const replyForm = document.getElementById(`reply-form-${messageId}`);
+    if (replyForm.style.display === 'block') {
+        replyForm.style.display = 'none';
+    } else {
+        // Сховати всі інші форми відповідей
+        document.querySelectorAll('.reply-form').forEach(form => {
+            form.style.display = 'none';
+        });
+        replyForm.style.display = 'block';
+        
+        // Прокрутити до форми відповіді
+        replyForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+// Прокрутка до повідомлення при кліку на посилання
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        const element = document.querySelector(window.location.hash);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.style.animation = 'highlight 2s';
+        }
+    }
+});
+
+function voteMessage(messageId, voteType) {
+    fetch(`/forum/message/${messageId}/vote`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `vote_type=${voteType}`
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        
+        const messageCard = document.getElementById(`message-${messageId}`);
+        const likeBtn = messageCard.querySelector('.like-btn');
+        const dislikeBtn = messageCard.querySelector('.dislike-btn');
+        const likesCount = messageCard.querySelector('.likes-count');
+        const dislikesCount = messageCard.querySelector('.dislikes-count');
+        
+        // Оновлюємо лічильники
+        likesCount.textContent = data.likes;
+        dislikesCount.textContent = data.dislikes;
+        
+        // Оновлюємо стан кнопок
+        if (voteType === 'like') {
+            if (likeBtn.classList.contains('active')) {
+                likeBtn.classList.remove('active');
+            } else {
+                likeBtn.classList.add('active');
+                dislikeBtn.classList.remove('active');
+            }
+        } else {
+            if (dislikeBtn.classList.contains('active')) {
+                dislikeBtn.classList.remove('active');
+            } else {
+                dislikeBtn.classList.add('active');
+                likeBtn.classList.remove('active');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Помилка:', error);
+        alert('Виникла помилка при голосуванні');
+    });
+}
+
+function pinMessage(messageId) {
+    fetch(`/forum/message/${messageId}/pin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        
+        const messageCard = document.getElementById(`message-${messageId}`);
+        const pinButton = messageCard.querySelector('.pin-button');
+        
+        if (data.is_pinned) {
+            messageCard.classList.add('pinned');
+            pinButton.classList.add('active');
+            pinButton.title = 'Відкріпити повідомлення';
+        } else {
+            messageCard.classList.remove('pinned');
+            pinButton.classList.remove('active');
+            pinButton.title = 'Закріпити повідомлення';
+        }
+        
+        // Перезавантажуємо сторінку для оновлення порядку повідомлень
+        location.reload();
+    })
+    .catch(error => {
+        console.error('Помилка:', error);
+        alert('Виникла помилка при закріпленні повідомлення');
+    });
+}
+
+function deleteMessage(messageId) {
+    if (!confirm('Ви впевнені, що хочете видалити це повідомлення?')) {
+        return;
+    }
+    
+    fetch(`/forum/message/${messageId}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        
+        // Видаляємо повідомлення з DOM
+        const messageCard = document.getElementById(`message-${messageId}`);
+        messageCard.remove();
+        
+        // Показуємо повідомлення про успішне видалення
+        alert('Повідомлення успішно видалено');
+    })
+    .catch(error => {
+        console.error('Помилка:', error);
+        alert('Виникла помилка при видаленні повідомлення');
+    });
+}
+</script>
+
+<style>
+@keyframes highlight {
+    0% { background: rgba(33, 150, 243, 0.3); }
+    100% { background: rgba(0, 0, 0, 0.4); }
+}
+</style>
+{% endblock %} 

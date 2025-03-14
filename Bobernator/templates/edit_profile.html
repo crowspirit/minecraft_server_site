@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Редагування профілю{% endblock %}
+
+{% block content %}
+<style>
+    .card {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .card:hover {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .card-header {
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .form-control {
+        background-color: rgba(33, 37, 41, 0.8) !important;
+        border-color: rgba(255, 255, 255, 0.1);
+        color: white !important;
+    }
+    .form-control:focus {
+        background-color: rgba(33, 37, 41, 0.9) !important;
+        border-color: rgba(255, 255, 255, 0.2);
+        color: white !important;
+        box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+    }
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h4 mb-0 text-white">Редагування профілю</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="discord_username" class="form-label text-white">Discord нікнейм</label>
+                            <input type="text" class="form-control bg-dark text-white" id="discord_username" name="discord_username" value="{{ current_user.discord_username or '' }}" placeholder="Ваш Discord нікнейм">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="about_me" class="form-label text-white">Про мене</label>
+                            <textarea class="form-control bg-dark text-white" id="about_me" name="about_me" rows="5" placeholder="Розкажіть щось про себе...">{{ current_user.about_me or '' }}</textarea>
+                            <div class="form-text text-white opacity-75">Ви можете використовувати форматування тексту та емодзі.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+                            <a href="{{ url_for('profile', username=current_user.username) }}" class="btn btn-outline-light">Скасувати</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
