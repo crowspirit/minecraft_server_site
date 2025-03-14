@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block title %}Команди серверу{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Команди авторизації -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Команди авторизації</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Команда</th>
+                            <th>Опис</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/register &lt;пароль&gt; &lt;пароль&gt;</code></td>
+                            <td>Зареєструватися на сервері. Потрібно ввести пароль двічі для підтвердження</td>
+                        </tr>
+                        <tr>
+                            <td><code>/login &lt;пароль&gt;</code></td>
+                            <td>Увійти в аккаунт після перезаходу на сервер</td>
+                        </tr>
+                        <tr>
+                            <td><code>/password &lt;пароль&gt;</code></td>
+                            <td>Змінити пароль від свого аккаунту</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Команди телепортації -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Команди телепортації</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Команда</th>
+                            <th>Опис</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/tpa &lt;гравець&gt;</code></td>
+                            <td>Запит на телепортацію до зазначеного гравця</td>
+                        </tr>
+                        <tr>
+                            <td><code>/tpaccept</code></td>
+                            <td>Приймає запити на телепортацію</td>
+                        </tr>
+                        <tr>
+                            <td><code>/tpdeny</code></td>
+                            <td>Відхиляє запити на телепортацію</td>
+                        </tr>
+                        <tr>
+                            <td><code>/tpahere &lt;гравець&gt;</code></td>
+                            <td>Просить зазначеного гравця телепортуватися до вас</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Команди повідомлень -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Команди повідомлень</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Команда</th>
+                            <th>Опис</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/msg &lt;гравець&gt; &lt;повідомлення&gt;</code></td>
+                            <td>Надсилає приватне повідомлення зазначеному гравцю</td>
+                        </tr>
+                        <tr>
+                            <td><code>/r &lt;повідомлення&gt;</code></td>
+                            <td>Швидка відповідь останньому гравцю, що Вам написав</td>
+                        </tr>
+                        <tr>
+                            <td><code>/mail</code></td>
+                            <td>Керує Вашою серверною поштою</td>
+                        </tr>
+                        <tr>
+                            <td><code>/helpop &lt;повідомлення&gt;</code></td>
+                            <td>Повідомлення адміністраторам онлайн</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Команди інформації -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Команди інформації</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Команда</th>
+                            <th>Опис</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/getpos [гравець]</code></td>
+                            <td>Отримайте ваші/іншого гравця поточні координати</td>
+                        </tr>
+                        <tr>
+                            <td><code>/recipe</code></td>
+                            <td>Показує як створити предмети</td>
+                        </tr>
+                        <tr>
+                            <td><code>/discord</code></td>
+                            <td>DiscordSRV commands (Команди DiscordSRV)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Команди емоцій -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Команди емоцій</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Команда</th>
+                            <th>Опис</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/glay</code></td>
+                            <td>Команда лягання</td>
+                        </tr>
+                        <tr>
+                            <td><code>/gsit</code></td>
+                            <td>Команда сидіння</td>
+                        </tr>
+                        <tr>
+                            <td><code>/gbellyflop</code></td>
+                            <td>Команда "пузом на воду"</td>
+                        </tr>
+                        <tr>
+                            <td><code>/gspin</code></td>
+                            <td>Команда обертання</td>
+                        </tr>
+                        <tr>
+                            <td><code>/emote</code></td>
+                            <td>Показати емоцію</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Команди скінів -->
+    <div class="card bg-dark text-white mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Команди скінів</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Команда</th>
+                            <th>Опис</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/skin &lt;нікнейм&gt;</code></td>
+                            <td>Встановити собі скін іншого гравця</td>
+                        </tr>
+                        <tr>
+                            <td><code>/skin url &lt;посилання&gt;</code></td>
+                            <td>Встановити скін за URL-посиланням</td>
+                        </tr>
+                        <tr>
+                            <td><code>/skin clear</code></td>
+                            <td>Повернути свій оригінальний скін</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Інші команди -->
+    <div class="card bg-dark text-white">
+        <div class="card-header">
+            <h2 class="mb-0">Інші команди</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Команда</th>
+                            <th>Опис</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/hat</code></td>
+                            <td>Надіти на голову предмет</td>
+                        </tr>
+                        <tr>
+                            <td><code>/firework</code></td>
+                            <td>Дозволяє змінювати стак феєрверків</td>
+                        </tr>
+                        <tr>
+                            <td><code>/disposal</code></td>
+                            <td>Відкриває портативне меню керування</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

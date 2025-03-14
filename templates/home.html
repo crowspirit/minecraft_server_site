@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Головна{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="h4 mb-0">Ласкаво просимо на сервер!</h2>
+                </div>
+                <div class="card-body">
+                    <p>Наш сервер - це місце, де ви можете грати в Minecraft з друзями, будувати неймовірні споруди та брати участь у захоплюючих пригодах!</p>
+                </div>
+            </div>
+
+            {% if current_user.is_authenticated %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="h4 mb-0">Пошук гравців</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('search_users') }}" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Введіть нікнейм гравця...">
+                            <button type="submit" class="btn btn-primary">Пошук</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="h4 mb-0">Статистика сервера</h3>
+                </div>
+                <div class="card-body">
+                    <div class="server-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <span class="stat-value">{{ total_players }}</span>
+                            <span class="stat-label">Зареєстрованих гравців</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-comments"></i>
+                            <span class="stat-value">{{ total_messages }}</span>
+                            <span class="stat-label">Повідомлень на форумі</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-signal"></i>
+                            <span class="stat-value {% if server_status.online %}text-success{% else %}text-danger{% endif %}">
+                                {{ server_status.players_online }}/{{ server_status.players_max }}
+                            </span>
+                            <span class="stat-label">
+                                {% if server_status.online %}
+                                    Гравців онлайн (Пінг: {{ server_status.latency }}ms)
+                                {% else %}
+                                    Сервер офлайн
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="text-white">Останні новини</h3>
+            {% if current_user.is_authenticated and current_user.is_admin %}
+            <a href="{{ url_for('create_news') }}" class="btn btn-primary">Створити новину</a>
+            {% endif %}
+        </div>
+        <div class="card-deck">
+            {% if news %}
+                {% for news_item in news %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-white">{{ news_item.title }}</h5>
+                        <p class="card-text text-white">{{ news_item.content }}</p>
+                        <p class="card-text">
+                            <small class="text-white opacity-75">
+                                Автор: {{ news_item.author.username }} | 
+                                {{ news_item.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            </small>
+                        </p>
+                        {% if current_user.is_authenticated and current_user.is_admin %}
+                        <form action="{{ url_for('delete_news', news_id=news_item.id) }}" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Ви впевнені, що хочете видалити цю новину?')">
+                                Видалити
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text text-white">Поки що немає новин.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

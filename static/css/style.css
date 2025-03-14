@@ -1,0 +1,129 @@
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,.05);
+    border: none;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.btn-primary {
+    background-color: #2b579a;
+    border-color: #2b579a;
+}
+
+.btn-primary:hover {
+    background-color: #1e3f7a;
+    border-color: #1e3f7a;
+}
+
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+.form-control:focus {
+    border-color: #2b579a;
+    box-shadow: 0 0 0 0.2rem rgba(43, 87, 154, 0.25);
+}
+
+/* Стилі для головної сторінки */
+.server-info {
+    background: linear-gradient(135deg, #2b579a 0%, #1e3f7a 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.server-info .card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.server-info .card-body {
+    color: white;
+}
+
+/* Стилі для форуму */
+.forum-category {
+    transition: all 0.3s ease;
+}
+
+.forum-category:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,.1);
+}
+
+/* Адаптивний дизайн */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+}
+
+/* Анімації */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,.1);
+}
+
+/* Кастомні кольори для статусу сервера */
+.server-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.server-status.online {
+    background-color: #28a745;
+    color: white;
+}
+
+.server-status.offline {
+    background-color: #dc3545;
+    color: white;
+} 
